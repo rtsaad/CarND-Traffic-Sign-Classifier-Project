@@ -1,10 +1,8 @@
 #**Traffic Sign Recognition** 
 
-##Writeup Template
+This project consists of an elaborated neural network to classify German Traffic Signs. It uses Image Recognition techniques to identify lane lines and draw it over the original image. The script itself can work over one or a sequence of images (i.e. video).
 
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
+The main goals of this project is to develop a sequence of operations (pipeline) that gets as input a raw image and outputs an annotate image where the lane lines are marked. Figures 1 and 2 depict examples of the input and output images.
 
 **Build a Traffic Sign Recognition Project**
 
