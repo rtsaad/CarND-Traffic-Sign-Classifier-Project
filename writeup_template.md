@@ -36,11 +36,11 @@ The source code for this project is available at [project code](https://github.c
 
 The data set provided by the German Neuroinformatik Institude consists of more than 50.000 images divided into 42 classes. All images are loaded using the pickle package and pre-analyzed using the helper functions from the numpy and matplotlib packages. The summary statistic of the Traffic Signs data set are presented below:
 
-*Size of Training set:    34799
-*Size of Validation set:   
-*Size of Test set:         12630
-*Image Shape: 		   32x32x3 (RGB)
-*Number of unique classes: 42
+* Size of Training set:     34799
+* Size of Validation set:   4410
+* Size of Test set:         12630
+* Image Shape: 		    32x32x3 (RGB)
+* Number of unique classes: 42
 
 Figure 2 describes the class distribution for the training set. From this figure, it is possible to assert that the distribution of images is not uniform between the classes, we can see a maximum difference factor of 10 between two given classes  (~ 200 to ~ 2000). Even though this difference is not sufficient to consider this data set as distorted (skwed), some classes will have more chances to be classified correctly than others.
 
@@ -122,14 +122,14 @@ The code for training the model is located in the seventh cell of the ipython no
 
 The approach taken to develop this project was an iterative process with empirical validation. The first step was to test the classical LeNet network, which achieved an accuracy of 86% on the validation test. After that, we extended the network with two additional convolution layers because we realized that our network was not capable to take into account more complex objects such as Traffic signs. With the addition of these extra layers, the accuracy for the training set reached 98% but the validation set did not reach 92%. Finally, we extended the network with two additional dropouts after the fully connected layers 1 and 2, which helped the network to reach 95% accuracy for the validation set in less than 10 EPOCHS.
 
-Even though this network has achieved 95% accuracy for the validation set, it did not perform well with the images downloaded from the Internet. We observed that our network was not robust enough to achieve translation invariance; our network classifies correctly only when the downloaded image are cropped at the center. This observation let us to extend our augmentation pipeline (see previous section about data augmentation) to also translate the images. As we mentioned previously, we use Tensor Flows functions to augment the data set in a random fashion and online with the training algorithm, i.e. the image is augmented only for the training and is not saved. We have set our augment pipeline to translate the images up to 10 pixel up/down/right/left.
+Even though this network has achieved 95% accuracy for the validation set, it did not perform well with the images downloaded from the Internet. We observed that our network was not robust enough to achieve translation invariance; our network correctly classifies only when the downloaded image are cropped at the center. This observation let us to extend our augmentation pipeline (see previous section about data augmentation) to also translate the images. As we mentioned previously, we use Tensor Flows functions to augment the data set in a random fashion and online with the training algorithm, i.e. the image is augmented only for the training and is not saved. We have set our augment pipeline to translate the images up to 10 pixel up/down/right/left.
 
-Because of the internet images and the translation augmentation, our final training algorithm takes two rounds to train the model. It first trains the network over the original data set for 10 EPOCHS. Then, it trains another 10 EPOCHS using the augment data pipeline to change the images at random, for each training. During this new training round, the accuracy for the validation set decays because of the image translation from data augmentation. We have observed that using a translation of up to 10 pixel worsens the validation accuracy but improves the prediction of the Internet images. Values below 10 pixels yields better accuracy for the original validation set; the value 10 for the translation was the limit we found to reach the minimum accuracy for the validation set of 93% and also able to correctly predict the images from the web. 
+Because of the internet images and the translation augmentation, our final training algorithm takes two rounds to train the model. It first trains the network over the original data set for 10 EPOCHS. Then, it trains another 10 EPOCHS using the augment data pipeline to change the images at random, for each training. During this new training round, the accuracy for the validation set decays (from ~95% to ~94%) because of the image translation from data augmentation. We have observed that using a translation of up to 7 pixel worsens the validation accuracy but improves the prediction of the Internet images. Values below 7 pixels yields better accuracy for the original validation set but not for the Internet images; the parameter 7 pixel for the translation function was the limit we found to reach the minimum accuracy for the validation set of 93% and also able to correctly predict the images from the web. 
 
 Final Results:
-* training set accuracy of   ~97%
-* validation set accuracy of ~93% 
-* test set accuracy of       ~92%
+* training set accuracy of   ~97.7%
+* validation set accuracy of ~94.4% 
+* test set accuracy of       ~93.0%
 
 The code for calculating the accuracy of the model is located in the eighth and ninth cells of the Ipython notebook.
 
@@ -141,7 +141,7 @@ Here are five German traffic signs downloaded from the web:
 ![alt text][image11] ![alt text][image12]
 
 
-First, it is important to observe the relation between these images and the number of examples at the training data set. From the training data set, image 1 has 2010 examples, image 2 has 1260 examples, image 3 480 examples, image 4 1860 examples and image 5 690 examples. So, because of the unbalance character among these classes, images 3 and 5 are more difficult to classify.
+First, it is important to observe the relation between these images and the number of examples at the training data set. From the training data set, image 1 has 2010 examples, image 2 has 1260 examples, image 3 has 480 examples, image 4 has 1860 examples and image 5 has 690 examples. So, because of the unbalance character among these classes, images 3 and 5 are more difficult to classify.
 
 The second observation is that the image format (size) and the place in the image where the traffic sigh is positioned are quite different from the training data set. The size difference can be easily circumvented by pre-processing the image. However, the position problem is not trivial to solve because the sign can be positioned at any place in the image. At first, we tried to hand code a crop pre-processing function but we believe that this is not right way to solve this problem because the sigh can be at any place. Finally, as we mentioned previously, we decide to augment our data set with a translation operation to move the signs around inside the images to overcome this problem.
 
@@ -149,29 +149,63 @@ In order to understand better the predictions from our model, we decided to test
 
 | Image			        |	Original	|	Aut. Croped	| 	Hand Croped	        					| 
 |:---------------------:|:---------------:|:----------------:|:----------------:| 
-| 50 km/h      		|   									|
-| 60 km/h      		| Stop sign   									|
-| Children Crossing      		| Stop sign   									| 
-| Keep right     		| Stop sign   									| 
-| Stop Sign      		| Stop sign   									| 
+| 50 km/h      		| 50 km/h 		| 50 km/h		| 30 km/h |
+| 60 km/h      		| Roundabout mandatory	| 60 km/h 		| 60 km/h |
+| Children Crossing     | Bicycles crossing 	| Children Crossing 	| Children Crossing | 
+| Keep right   		| Go straight or right	| Keep right 		| Keep right |
+| Stop Sign    		| 60 km/h 		| 30 km/h 		| Stop Sign |
 
 The code for making these predictions is located in the 11th and 12th cells of the Ipython notebook.
 
-For the original images, the classifier was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. For the automatically and hand cropped, the classifier giver an accuracy of % and %, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set.) Another important fact that collaborates with our assumption is that the neural network incorrectly classified image 1, which is one of the images with more examples in the training set, i.e. more chances to be classified.
+For the original images, the classifier was able to correctly guess 1 of the 5 traffic signs, which gives an accuracy of 40%. The neural network classified correctly images 1 and 4, which are the images with more examples in the training set (2010).
 
+For the automatically and hand cropped, the classifier giver an accuracy of 80% and 100%, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped versions of the images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set, which is above 80%.) 
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+Here, we present the top 5 probilities for the hand cropped images only. Our model has a confidence of 99% for the prediction of images 1, 2, 4 and 5. For image 2, our model is realtively sure with 80% of confidence. The top five soft max probabilities for each image is presented below:
 
-Here, we present the top 5 probilities for the original images only. For the first image (50 km/h), the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
-
-| Probability         	|     Prediction	        					| 
+| Probability         	|     Prediction	| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| 50 km/h   									| 
-| .20     				| 60 km/h 										|
-| .05					| Children Crossing										|
-| .04	      			|  Keep right			 				|
-| .01				    |  Stop Sign							|
+| .99         		| 50 km/h	| 
+| .00~     		| 30 km/h 	|
+| .00~			| 60 km/h	|
+| .00~	      		| 100 km/h |
+| .00~			| 20 km/h |
 
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .99         		| 60 km/h	| 
+| .00~    		| 80 km/h 	|
+| .00~			| 50 km/h |
+| .00~	      		| 80 km/h* |
+| .00~			| 30 km/h |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .80         		| Children crossing	| 
+| .17     		| Beware of ice/snow |
+| .02~			| Road narrows on the right |
+| .00~	      		| Right-of-way at |
+| .00~			| Dangerous curve to |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .99         		| Keep right	| 
+| .00    		| Yield |
+| .00			| Priority road |
+| .00	      		| Turn left ahead |
+| .00			| 50km/h |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .99         		| STOP	| 
+| .00~     		| Turn right ahead |
+| .00~			| Go straight or left |
+| .00~	      		| 30 km/h |
+| .00~			| Turn left ahead |
 
 The code for making predictions is located in the 13th cell of the Ipython notebook.
 
