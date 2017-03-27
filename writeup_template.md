@@ -15,15 +15,16 @@ The main goals of this project is to develop a neural network that gets as input
 [image3]: ./pre/standarize.jpg "Standarize Operation"
 [image4]: ./pre/all.jpg "All Pre-Processing Operations"
 [image5]: ./preprocessing.png "Pre-Processing Image Before Neural Network"
-[image6]: ./pre-processing-functions.jpg "Pre-Processing Functions"
+[image6]: ./pre/pre-processing-functions.jpg "Pre-Processing Functions"
 [image7]: ./augment-data.png "Augment Image before Pipeline"
+[image13]: ./pre/pre-augmented.png "Augmented Image"
 
 
-[image7]: ./german_signs/original/50km.jpg "50 km/h"
-[image8]: ./german_signs/original/60km.jpg "60 km/h"
-[image9]: ./german_signs/original/childrenkm.jpg "Children Crossing"
-[image10]: ./german_signs/original/right.jpg "Keep Right"
-[image11]: ./german_signs/original/stop.jpg "Stop Sign"
+[image8]: ./german_signs/original/50km.jpg "50 km/h"
+[image9]: ./german_signs/original/60km.jpg "60 km/h"
+[image10]: ./german_signs/original/childrenkm.jpg "Children Crossing"
+[image11]: ./german_signs/original/right.jpg "Keep Right"
+[image12]: ./german_signs/original/stop.jpg "Stop Sign"
 
 
 ## Access
@@ -72,7 +73,7 @@ Figure 5 shows the Data Augmentation Pipeline. This new pipeline changes the ima
 
 ![alt text][image7]
 
-![alt text][image3]
+![alt text][image13]
 
 The code for this part is contained in the code cell of the second setp of the IPython notebook.
 
@@ -133,8 +134,8 @@ The code for calculating the accuracy of the model is located in the ninth cell 
 
 Here are five German traffic signs downloaded from the web:
 
-![alt text][image7] ![alt text][image8] ![alt text][image9] 
-![alt text][image10] ![alt text][image11]
+![alt text][image8] ![alt text][image9] ![alt text][image10] 
+![alt text][image11] ![alt text][image12]
 
 
 First, it is important to observe the relation between these images and the number of examples at the training data set. From the training data set, image 1 has 2010 examples, image 2 has 1260 examples, image 3 480 examples, image 4 1860 examples and image 5 690 examples. So, because of the unbalance character among these classes, images 3 and 5 are more difficult to classify.
