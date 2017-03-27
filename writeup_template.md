@@ -151,9 +151,9 @@ In order to understand better the predictions from our model, we decided to test
 |:---------------------:|:---------------:|:----------------:|:----------------:| 
 | 50 km/h      		| 50 km/h 		| 50 km/h		| 30 km/h |
 | 60 km/h      		| Roundabout mandatory	| 60 km/h 		| 60 km/h |
-| Children Crossing     | Bicycles crossing 	| Children Crossing 	| Children Crossing | 
-| Keep right   		| Go straight or right	| Keep right 		| Keep right |
-| Stop Sign    		| 60 km/h 		| 30 km/h 		| Stop Sign |
+| Children Crossing     | Wild animals crossing	| Children Crossing 	| Children Crossing | 
+| Keep right   		| Keep right	| Keep right 		| Keep right |
+| Stop Sign    		| 80 km/h 		| 30 km/h 		| Stop Sign |
 
 The code for making these predictions is located in the 11th and 12th cells of the Ipython notebook.
 
