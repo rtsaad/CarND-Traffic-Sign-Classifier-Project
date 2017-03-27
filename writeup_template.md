@@ -42,7 +42,7 @@ The data set provided by the German Neuroinformatik Institude consists of more t
 * Size of Validation set:   4410
 * Size of Test set:         12630
 * Image Shape: 		    32x32x3 (RGB)
-* Number of unique classes: 42
+* Number of unique classes: 43
 
 Figure 2 describes the class distribution for the training set. From this figure, it is possible to assert that the distribution of images is not uniform between the classes, we can see a maximum difference factor of 10 between two given classes  (~ 200 to ~ 2000). Even though this difference is not sufficient to consider this data set as distorted (skwed), some classes will have more chances to be classified correctly than others.
 
@@ -84,7 +84,7 @@ The code for this part is contained in the code cell of the fifth setp of the IP
 
 ### Neural Network
 
-The neural network implemented for this work is a custom extended version of LeNet network enhanced with two extra Convolution Layers. These extra layers helps the network to learn more complex object such as traffic signs. We have used the LeNet as a starting point and customized it to fit the Traffic Signs requirements. This process was done empirically by increasing the number of layers and testing to check if accuracy was improved. The classical LeNet achieved around 85% accuracy on validation test and every new layer increased the accuracy in roughly 5%, resulting in a final accuracy of 95%. Finally, there is an extra fully connected layer to adjust the number of neurons because of the increased number of shared weights (due to the extra convolution layers). Figure 8 presents the network architecture.
+The neural network implemented for this work is a custom extended version of LeNet network enhanced with two extra Convolution Layers. These extra layers helps the network to learn more complex object such as traffic signs. We have used the LeNet as a starting point and customized it to fit the Traffic Signs requirements. This process was done empirically by increasing the number of layers and testing to check if accuracy was improved. The classical LeNet achieved around 85% accuracy on validation test and every new layer increased the accuracy in roughly 5%, resulting in a final accuracy above 95%. Finally, there is an extra fully connected layer to adjust the number of neurons because of the increased number of shared weights (due to the extra convolution layers). Figure 8 presents the network architecture.
 
 
 | Layer        		 	|     Description	        					| 
@@ -122,16 +122,16 @@ The code for training the model is located in the seventh cell of the ipython no
 
 ### Results
 
-The approach taken to develop this project was an iterative process with empirical validation. The first step was to test the classical LeNet network, which achieved an accuracy of 86% on the validation test. After that, we extended the network with two additional convolution layers because we realized that our network was not capable to take into account more complex objects such as Traffic signs. With the addition of these extra layers, the accuracy for the training set reached 98% but the validation set did not reach 92%. Finally, we extended the network with two additional dropouts after the fully connected layers 1 and 2, which helped the network to reach 95% accuracy for the validation set in less than 10 EPOCHS.
+The approach taken to develop this project was an iterative process with empirical validation. The first step was to test the classical LeNet network, which achieved an accuracy of 86% on the validation test. After that, we extended the network with two additional convolution layers because we realized that our network was not capable to take into account more complex objects such as Traffic signs. With the addition of these extra layers, the accuracy for the training set reached 98% but the validation set did not reach 92%. Finally, we extended the network with two additional dropouts after the fully connected layers 1 and 2, which helped the network to reach an accuracy above 95% for the validation set in less than 10 EPOCHS.
 
-Even though this network has achieved 95% accuracy for the validation set, it did not perform well with the images downloaded from the Internet. We observed that our network was not robust enough to achieve translation invariance; our network correctly classifies only when the downloaded image are cropped at the center. This observation let us to extend our augmentation pipeline (see previous section about data augmentation) to also translate the images. As we mentioned previously, we use Tensor Flows functions to augment the data set in a random fashion and online with the training algorithm, i.e. the image is augmented only for the training and is not saved. We have set our augment pipeline to translate the images up to 10 pixel up/down/right/left.
+Even though this network has achieved a high accuracy for the validation set, it did not perform well with the images downloaded from the Internet. We observed that our network was not robust enough to achieve translation invariance; our network correctly classifies only when the downloaded image are cropped at the center. This observation let us to extend our augmentation pipeline (see previous section about data augmentation) to also translate the images. As we mentioned previously, we use Tensor Flows functions to augment the data set in a random fashion and online with the training algorithm, i.e. the image is augmented only for the training and is not saved. We have set our augment pipeline to translate the images up to 10 pixel up/down/right/left.
 
-Because of the internet images and the translation augmentation, our final training algorithm takes two rounds to train the model. It first trains the network over the original data set for 10 EPOCHS. Then, it trains another 10 EPOCHS using the augment data pipeline to change the images at random, for each training. During this new training round, the accuracy for the validation set decays (from ~95% to ~94%) because of the image translation from data augmentation. We have observed that using a translation of up to 7 pixel worsens the validation accuracy but improves the prediction of the Internet images. Values below 7 pixels yields better accuracy for the original validation set but not for the Internet images; the parameter 7 pixel for the translation function was the limit we found to reach the minimum accuracy for the validation set of 93% and also able to correctly predict the images from the web. 
+Because of the internet images and the translation augmentation, our final training algorithm takes two rounds to train the model. It first trains the network over the original data set for 10 EPOCHS. Then, it trains another 10 EPOCHS using the augment data pipeline to change the images at random, for each training. 
 
 Final Results:
-* training set accuracy of   ~97.7%
-* validation set accuracy of ~94.4% 
-* test set accuracy of       ~93.0%
+* training set accuracy of   ~99.5%
+* validation set accuracy of ~98.1% 
+* test set accuracy of       ~96.2%
 
 The code for calculating the accuracy of the model is located in the eighth and ninth cells of the Ipython notebook.
 
@@ -152,62 +152,62 @@ In order to understand better the predictions from our model, we decided to test
 | Image			        |	Original	|	Aut. Croped	| 	Hand Croped	        					| 
 |:---------------------:|:---------------:|:----------------:|:----------------:| 
 | 50 km/h      		| 50 km/h 		| 50 km/h		| 30 km/h |
-| 60 km/h      		| Roundabout mandatory	| 60 km/h 		| 60 km/h |
+| 60 km/h      		| Ahead only		| 60 km/h 		| 60 km/h |
 | Children Crossing     | Wild animals crossing	| Children Crossing 	| Children Crossing | 
-| Keep right   		| Keep right	| Keep right 		| Keep right |
-| Stop Sign    		| 80 km/h 		| 30 km/h 		| Stop Sign |
+| Keep right   		| Keep right		| Keep right 		| Keep right |
+| Stop Sign    		| 60 km/h 		| Stop Sign 		| Stop Sign |
 
 The code for making these predictions is located in the 11th and 12th cells of the Ipython notebook.
 
 For the original images, the classifier was able to correctly guess 2 of 5, which gives an accuracy of 40%. The neural network classified correctly images 1 and 4, which are the images with more examples in the training set (2010).
 
-For the automatically and hand cropped, the classifier giver an accuracy of 80% and 100%, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped versions of the images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set, which is above 80%.) 
+For the automatically and hand cropped, the classifier giver an accuracy of 100% and 80%, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped versions of the images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set, which is above 80%.) 
 
-Here, we present the top 5 probilities for the hand cropped images only. Our model has a confidence of 99% for the prediction of images 1, 2, 4 and 5. For image 2, our model is realtively sure with 80% of confidence. The top five soft max probabilities for each image is presented below:
-
-| Probability         	|     Prediction	| 
-|:---------------------:|:---------------------------------------------:| 
-| .99         		| 50 km/h	| 
-| .00~     		| 30 km/h 	|
-| .00~			| 60 km/h	|
-| .00~	      		| 100 km/h |
-| .00~			| 20 km/h |
-
+Here, we present the top 5 probilities for the automatic cropped images only. Our model has high confidence  (above 80%) for the prediction of images 1, 2 and 4. For image 3, our model is realtively sure with 70% of confidence. For image 5 the confidence is ~50%. Here, is important to point out that images 3 and 5 are the ones with less examples in the training set. The top five soft max probabilities for each image is presented below:
 
 | Probability         	|     Prediction	| 
 |:---------------------:|:---------------------------------------------:| 
-| .99         		| 60 km/h	| 
-| .00~    		| 80 km/h 	|
-| .00~			| 50 km/h |
-| .00~	      		| 80 km/h* |
-| .00~			| 30 km/h |
+| .94         		| 50 km/h	| 
+| .05     		| 30 km/h 	|
+| .00~			| 80 km/h	|
+| .00~	      		| 60 km/h |
+| .00~			| 100 km/h |
 
 
 | Probability         	|     Prediction	| 
 |:---------------------:|:---------------------------------------------:| 
-| .80         		| Children crossing	| 
-| .17     		| Beware of ice/snow |
-| .02~			| Road narrows on the right |
-| .00~	      		| Right-of-way at |
+| .80         		| 60 km/h	| 
+| .07    		| 80 km/h 	|
+| .05			| 30 km/h |
+| .03	      		| 50 km/h* |
+| .02			| 20 km/h |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .74         		| Children crossing	| 
+| .14     		| Road narrows on the right |
+| .09			| Beware of ice/snow |
+| .01	      		| Right-of-way at |
 | .00~			| Dangerous curve to |
 
 
 | Probability         	|     Prediction	| 
 |:---------------------:|:---------------------------------------------:| 
-| .99         		| Keep right	| 
-| .00    		| Yield |
-| .00			| Priority road |
-| .00	      		| Turn left ahead |
-| .00			| 50km/h |
+| .100         		| Keep right	| 
+| .00~    		| Turn left ahead |
+| .00~			| Priority road |
+| .00~	      		| Stop |
+| .00~			| Slippery road |
 
 
 | Probability         	|     Prediction	| 
 |:---------------------:|:---------------------------------------------:| 
-| .99         		| STOP	| 
-| .00~     		| Turn right ahead |
-| .00~			| Go straight or left |
-| .00~	      		| 30 km/h |
-| .00~			| Turn left ahead |
+| .55         		| STOP	| 
+| .11     		| 80 km/h |
+| .09			| 60 km/h |
+| .09	      		| 30 km/h |
+| .08			| 50 km/h |
 
 The code for making predictions is located in the 13th cell of the Ipython notebook.
 
