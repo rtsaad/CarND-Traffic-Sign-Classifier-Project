@@ -18,7 +18,7 @@ The main goals of this project is to develop a neural network that gets as input
 [image6]: ./pre/pre-processing-functions.png "Pre-Processing Functions"
 [image7]: ./augment-data.png "Augment Image before Pipeline"
 [image13]: ./pre/pre-augmented.png "Augmented Image"
-[image14]: ./pre/pre-processined.png "Pre-Processed Image"
+[image14]: ./pre/pre-processed.png "Pre-Processed Image"
 
 
 [image8]: ./german_signs/original/50km.jpg "50 km/h"
@@ -147,9 +147,9 @@ The second observation is that the image format (size) and the place in the imag
 
 In order to understand better the predictions from our model, we decided to test the classifier over three versions for every image from the web, they are: the original image, an automatic cropped version and a hand cropped version. Here are the results for the prediction for all of them:
 
-| Image			        |	Original	Aut. Croped	Hand Croped	        					| 
+| Image			        |	Original	|	Aut. Croped	| 	Hand Croped	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| 50 km/h      		| Stop sign   									|
+| 50 km/h      		|   									|
 | 60 km/h      		| Stop sign   									|
 | Children Crossing      		| Stop sign   									| 
 | Keep right     		| Stop sign   									| 
