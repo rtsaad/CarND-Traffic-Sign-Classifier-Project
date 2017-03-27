@@ -30,7 +30,9 @@ The main goals of this project is to develop a neural network that gets as input
 
 ## Access
 
-The source code for this project is available at [project code](https://github.com/otomata/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+The source code for this project is available at [project code](https://github.com/otomata/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb) and an html version at [project html output](https://github.com/otomata/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.html) 
+
+
 
 ## Data Set Summary and Exploratory Visualization
 
