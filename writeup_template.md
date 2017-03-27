@@ -157,7 +157,7 @@ In order to understand better the predictions from our model, we decided to test
 
 The code for making these predictions is located in the 11th and 12th cells of the Ipython notebook.
 
-For the original images, the classifier was able to correctly guess 1 of the 5 traffic signs, which gives an accuracy of 40%. The neural network classified correctly images 1 and 4, which are the images with more examples in the training set (2010).
+For the original images, the classifier was able to correctly guess 2 of 5, which gives an accuracy of 40%. The neural network classified correctly images 1 and 4, which are the images with more examples in the training set (2010).
 
 For the automatically and hand cropped, the classifier giver an accuracy of 80% and 100%, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped versions of the images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set, which is above 80%.) 
 
