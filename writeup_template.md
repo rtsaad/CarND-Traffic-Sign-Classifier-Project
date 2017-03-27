@@ -15,14 +15,15 @@ The main goals of this project is to develop a neural network that gets as input
 [image3]: ./pre/standarize.jpg "Standarize Operation"
 [image4]: ./pre/all.jpg "All Pre-Processing Operations"
 [image5]: ./preprocessing.png "Pre-Processing Image Before Neural Network"
-[image6]: ./pre/pre-processing-functions.jpg "Pre-Processing Functions"
+[image6]: ./pre/pre-processing-functions.png "Pre-Processing Functions"
 [image7]: ./augment-data.png "Augment Image before Pipeline"
 [image13]: ./pre/pre-augmented.png "Augmented Image"
+[image14]: ./pre/pre-processined.png "Pre-Processed Image"
 
 
 [image8]: ./german_signs/original/50km.jpg "50 km/h"
 [image9]: ./german_signs/original/60km.jpg "60 km/h"
-[image10]: ./german_signs/original/childrenkm.jpg "Children Crossing"
+[image10]: ./german_signs/original/children.jpg "Children Crossing"
 [image11]: ./german_signs/original/right.jpg "Keep Right"
 [image12]: ./german_signs/original/stop.jpg "Stop Sign"
 
@@ -59,7 +60,9 @@ Among the several image processing functions the TensorFlor library offers, the 
 
 ![alt text][image6]
 
-For the neural network developed for this project, only the Gray Scale and Standardized functions resulted in significant improvements. It is is important to point out that Gray Scale alone is enough to hold satisfactory results, the use of Standardized only helped to improve around %1 the accuracy of our classifier. The use of Contrast, Brightness and Hue did not show any compelling improvement in our tests.
+For the neural network developed for this project, only the Gray Scale and Standardized functions resulted in significant improvements. It is is important to point out that Gray Scale alone is enough to hold satisfactory results, the use of Standardized only helped to improve around %1 the accuracy of our classifier. The use of Contrast, Brightness and Hue did not show any compelling improvement in our tests. Figure 5 shows a final pre-processed image.
+
+![alt text][image14]
 
 The code for this part is contained in the code cell of the second setp of the IPython notebook.
 
@@ -69,7 +72,7 @@ Data labeling is a key point for a supervised learning algorithm to be able to p
 
 For this project, we have created a new pipeline using the Tensor Flow library for image manipulation to augment the data set. Tensor Flow offers some functions that randomly change the image, reducing the chance of the same image to be processed twice by the Neural Network, which therefore reduces the chance of over fitting the neural network. This new pipeline is placed before the neural network and executed online with the optimizer for every batch.
 
-Figure 5 shows the Data Augmentation Pipeline. This new pipeline changes the image contrast and brightness in random fashion (see Tenfor Flow documentation for tf.image.random_contrast and tf.image.random_brightness). The main objective is to train the network to deal with different contrast and brightness situations. In addition, the augment pipeline also uses the extract_glimpse that randomly "moves", or translate, the image around in order to improve the Neural Network robustness for Translation Invariance. Figure 6 shows an example of an augmented image. 
+Figure 6 shows the Data Augmentation Pipeline. This new pipeline changes the image contrast and brightness in random fashion (see Tenfor Flow documentation for tf.image.random_contrast and tf.image.random_brightness). The main objective is to train the network to deal with different contrast and brightness situations. In addition, the augment pipeline also uses the extract_glimpse that randomly "moves", or translate, the image around in order to improve the Neural Network robustness for Translation Invariance. Figure 7 shows an example of an augmented image. 
 
 ![alt text][image7]
 
@@ -79,7 +82,7 @@ The code for this part is contained in the code cell of the second setp of the I
 
 ### Neural Network
 
-The neural network implemented for this work is a custom extended version of LeNet network enhanced with two extra Convolution Layers. These extra layers helps the network to learn more complex object such as traffic signs. We have used the LeNet as a starting point and customized it to fit the Traffic Signs requirements. This process was done empirically by increasing the number of layers and testing to check if accuracy was improved. The classical LeNet achieved around 85% accuracy on validation test and every new layer increased the accuracy in roughly 5%, resulting in a final accuracy of 95%. Finally, there is an extra fully connected layer to adjust the number of neurons because of the increased number of shared weights (due to the extra convolution layers). Figure 7 presents the network architecture.
+The neural network implemented for this work is a custom extended version of LeNet network enhanced with two extra Convolution Layers. These extra layers helps the network to learn more complex object such as traffic signs. We have used the LeNet as a starting point and customized it to fit the Traffic Signs requirements. This process was done empirically by increasing the number of layers and testing to check if accuracy was improved. The classical LeNet achieved around 85% accuracy on validation test and every new layer increased the accuracy in roughly 5%, resulting in a final accuracy of 95%. Finally, there is an extra fully connected layer to adjust the number of neurons because of the increased number of shared weights (due to the extra convolution layers). Figure 8 presents the network architecture.
 
 
 | Layer        		 	|     Description	        					| 
