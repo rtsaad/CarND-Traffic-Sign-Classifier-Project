@@ -64,7 +64,7 @@ For the neural network developed for this project, only the Gray Scale and Stand
 
 ![alt text][image14]
 
-The code for this part is contained in the code cell of the second setp of the IPython notebook.
+The code for this part is contained in the code cell of the fourth setp of the IPython notebook.
 
 ### Data Augmentation
 
@@ -78,7 +78,7 @@ Figure 6 shows the Data Augmentation Pipeline. This new pipeline changes the ima
 
 ![alt text][image13]
 
-The code for this part is contained in the code cell of the second setp of the IPython notebook.
+The code for this part is contained in the code cell of the fifth setp of the IPython notebook.
 
 ### Neural Network
 
@@ -107,7 +107,7 @@ The neural network implemented for this work is a custom extended version of LeN
 | Fully connected		| output 42       									|
 | Softmax				|         									|
 
-The code for the Network is located in the seventh cell of the ipython notebook.
+The code for the Network is located in the sixth cell of the ipython notebook.
 
 ### Training
 
@@ -116,7 +116,7 @@ The training algorithm employs the Adam optimizer algorithm with a custom adjust
 The rest of the algorithm follows a common approach for classification problem which is to minimize the cross entropy between the logits (softmax) and the labels hot encoding. The values for the number of EPOCHS (20), batch size (256) and initial learning rate (0.001) were defined empirically. 
 
 
-The code for training the model is located in the eigth cell of the ipython notebook. 
+The code for training the model is located in the seventh cell of the ipython notebook. 
 
 ### Results
 
@@ -131,7 +131,7 @@ Final Results:
 * validation set accuracy of ~93% 
 * test set accuracy of       ~92%
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
+The code for calculating the accuracy of the model is located in the eighth and ninth cells of the Ipython notebook.
 
 ###Test a Model on New Images
 
@@ -148,20 +148,21 @@ The second observation is that the image format (size) and the place in the imag
 In order to understand better the predictions from our model, we decided to test the classifier over three versions for every image from the web, they are: the original image, an automatic cropped version and a hand cropped version. Here are the results for the prediction for all of them:
 
 | Image			        |	Original	|	Aut. Croped	| 	Hand Croped	        					| 
-|:---------------------:|:---------------------------------------------:| 
+|:---------------------:|:---------------:|:----------------:|:----------------:| 
 | 50 km/h      		|   									|
 | 60 km/h      		| Stop sign   									|
 | Children Crossing      		| Stop sign   									| 
 | Keep right     		| Stop sign   									| 
 | Stop Sign      		| Stop sign   									| 
 
-The code for making these predictions is located in the tenth cell of the Ipython notebook.
+The code for making these predictions is located in the 11th and 12th cells of the Ipython notebook.
 
-For the original images, the classifier was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. For the automatically and hand croped, the classifier giver an accuracy of % and %, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped images from the web yielded a better accuracy.
+For the original images, the classifier was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. For the automatically and hand cropped, the classifier giver an accuracy of % and %, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set.) Another important fact that collaborates with our assumption is that the neural network incorrectly classified image 1, which is one of the images with more examples in the training set, i.e. more chances to be classified.
+
 
 ####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-Here, we present the top 5 probilities for the original images only. For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+Here, we present the top 5 probilities for the original images only. For the first image (50 km/h), the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -172,4 +173,7 @@ Here, we present the top 5 probilities for the original images only. For the fir
 | .01				    |  Stop Sign							|
 
 
-The code for making predictions is located in the 11th cell of the Ipython notebook.
+The code for making predictions is located in the 13th cell of the Ipython notebook.
+
+
+
