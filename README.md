@@ -1,54 +1,215 @@
-## Project: Build a Traffic Sign Recognition Program
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+# Traffic Sign Classification
 
-Overview
----
-In this project, you will use what you've learned about deep neural networks and convolutional neural networks to classify traffic signs. You will train and validate a model so it can classify traffic sign images using the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset). After the model is trained, you will then try out your model on images of German traffic signs that you find on the web.
+This project consists of an elaborated neural network to classify German Traffic Signs. It uses a custom variation of LeNet Neural Network extended with two extra Convolution Layers to identify and classify Traffic Signs from the German Traffic Sign Data set. The script itself can work with image of any size, as long as it can be converted to 32x32 pixels without irreversibly deformed it.
 
-We have included an Ipython notebook that contains further instructions 
-and starter code. Be sure to download the [Ipython notebook](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb). 
+The main goals of this project is to develop a neural network that gets as input a raw image of a German Traffic Sign and outputs a label (between 0 and 41) that correctly classifies it. Figure 1 depicts an example of traffic sign image. 
 
-We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
+![alt text][image0]
 
-To meet specifications, the project will require submitting three files: 
-* the Ipython notebook with the code
-* the code exported as an html file
-* a writeup report either as a markdown or pdf file 
 
-Creating a Great Writeup
----
-A great writeup should include the [rubric points](https://review.udacity.com/#!/rubrics/481/view) as well as your description of how you addressed each point.  You should include a detailed description of the code used in each step (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
+[//]: # (Image References)
 
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
+[image0]: ./pre/original.png "Traffic Sign Image Example"
+[image1]: ./layers/classes.png "Classes Distribution"
+[image2]: ./pre/grayscale.jpg "Grayscaling Operation"
+[image3]: ./pre/standarize.jpg "Standarize Operation"
+[image4]: ./pre/all.jpg "All Pre-Processing Operations"
+[image5]: ./preprocessing.png "Pre-Processing Image Before Neural Network"
+[image6]: ./pre/pre-processing-functions.png "Pre-Processing Functions"
+[image7]: ./augment-data.png "Augment Image before Pipeline"
+[image13]: ./pre/pre-augmented.png "Augmented Image"
+[image14]: ./pre/pre-processed.png "Pre-Processed Image"
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
 
-The Project
----
-The goals / steps of this project are the following:
-* Load the data set
-* Explore, summarize and visualize the data set
-* Design, train and test a model architecture
-* Use the model to make predictions on new images
-* Analyze the softmax probabilities of the new images
-* Summarize the results with a written report
+[image8]: ./german_signs/original/50km.jpg "50 km/h"
+[image9]: ./german_signs/original/60km.jpg "60 km/h"
+[image10]: ./german_signs/original/children.jpg "Children Crossing"
+[image11]: ./german_signs/original/right.jpg "Keep Right"
+[image12]: ./german_signs/original/stop.jpg "Stop Sign"
 
-### Dependencies
-This lab requires:
 
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
+## Access
 
-The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
+The source code for this project is available at [project code](https://github.com/otomata/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb) and an html version at [project html output](https://github.com/otomata/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.html) 
 
-### Dataset and Repository
 
-1. Download the data set. The classroom has a link to the data set in the "Project Instructions" content. This is a pickled dataset in which we've already resized the images to 32x32. It contains a training, validation and test set.
-2. Clone the project, which contains the Ipython notebook and the writeup template.
-```sh
-git clone https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project
-cd CarND-Traffic-Sign-Classifier-Project
-jupyter notebook Traffic_Sign_Classifier.ipynb
-```
 
-### Requirements for Submission
-Follow the instructions in the `Traffic_Sign_Classifier.ipynb` notebook and write the project report using the writeup template as a guide, `writeup_template.md`. Submit the project code and writeup document.
+## Data Set Summary and Exploratory Visualization
+
+The data set provided by the German Neuroinformatik Institude consists of more than 50.000 images divided into 42 classes. All images are loaded using the pickle package and pre-analyzed using the helper functions from the numpy and matplotlib packages. The summary statistic of the Traffic Signs data set are presented below:
+
+* Size of Training set:     34799
+* Size of Validation set:   4410
+* Size of Test set:         12630
+* Image Shape: 		    32x32x3 (RGB)
+* Number of unique classes: 43
+
+Figure 2 describes the class distribution for the training set. From this figure, it is possible to assert that the distribution of images is not uniform between the classes, we can see a maximum difference factor of 10 between two given classes  (~ 200 to ~ 2000). Even though this difference is not sufficient to consider this data set as distorted (skwed), some classes will have more chances to be classified correctly than others.
+
+![alt text][image1]
+
+The code for this part is contained in the code cell of the second setp of the IPython notebook. 
+
+## Design and Test a Model Architecture
+
+### Pre-Processing
+
+Pre-processing the data set is an important step not only to reduce the training time but also to achieve more favorable accuracy rates. For this model, we have tried different image processing techniques offered by the TensorFlow library (tf.image). We decide to use only Tensor Flow functions into this step because they fit perfectly as part of the pipeline and are execute online with the neural network. Actually, the pre-processing functions are the first step of the pipeline, right before the images are feed into the network (see Figure 3).
+
+![alt text][image5]
+
+Among the several image processing functions the TensorFlor library offers, the following functions were selected to be tested for this project: contrast adjust, brightness adjust, image standardization(scales image to have zero mean and unit norm), gray scale transformation, hue adjust and glimpse extraction. Figure 4 presents the output of each of these functions over a given image from the data set.
+
+![alt text][image6]
+
+For the neural network developed for this project, only the Gray Scale and Standardized functions resulted in significant improvements. It is is important to point out that Gray Scale alone is enough to hold satisfactory results, the use of Standardized only helped to improve around %1 the accuracy of our classifier. The use of Contrast, Brightness and Hue did not show any compelling improvement in our tests. Figure 5 shows a final pre-processed image.
+
+![alt text][image14]
+
+The code for this part is contained in the code cell of the fourth setp of the IPython notebook.
+
+### Data Augmentation
+
+Data labeling is a key point for a supervised learning algorithm to be able to predict the correct outcome. However, labeling data for all possible scenarios can be expensive and time consuming. Data augmentation helps to enrich the labeled data set by "augmenting" the data with some operations that mimics different conditions. For instance, image can be augmented with different contrasts, brightness, lighting, etc.
+
+For this project, we have created a new pipeline using the Tensor Flow library for image manipulation to augment the data set. Tensor Flow offers some functions that randomly change the image, reducing the chance of the same image to be processed twice by the Neural Network, which therefore reduces the chance of over fitting the neural network. This new pipeline is placed before the neural network and executed online with the optimizer for every batch.
+
+Figure 6 shows the Data Augmentation Pipeline. This new pipeline changes the image contrast and brightness in random fashion (see Tenfor Flow documentation for tf.image.random_contrast and tf.image.random_brightness). The main objective is to train the network to deal with different contrast and brightness situations. In addition, the augment pipeline also uses the extract_glimpse that randomly "moves", or translate, the image around in order to improve the Neural Network robustness for Translation Invariance. Figure 7 shows an example of an augmented image. 
+
+![alt text][image7]
+
+![alt text][image13]
+
+The code for this part is contained in the code cell of the fifth setp of the IPython notebook.
+
+### Neural Network
+
+The neural network implemented for this work is a custom extended version of LeNet network enhanced with two extra Convolution Layers. These extra layers helps the network to learn more complex object such as traffic signs. We have used the LeNet as a starting point and customized it to fit the Traffic Signs requirements. This process was done empirically by increasing the number of layers and testing to check if accuracy was improved. The classical LeNet achieved around 85% accuracy on validation test and every new layer increased the accuracy in roughly 5%, resulting in a final accuracy above 95%. Finally, there is an extra fully connected layer to adjust the number of neurons because of the increased number of shared weights (due to the extra convolution layers). Figure 8 presents the network architecture.
+
+
+| Layer        		 	|     Description	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| Input         		| 32x32x1 GRAY image   							| 
+| Convolution 5x5     	| 1x1 stride, same padding, outputs 32x32x6 	|
+| RELU					|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, outputs 28x28x16 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 14x14x16 				|
+| Convolution 3x3     	| 1x1 stride, valid padding, outputs 12x12x32 	|
+| RELU					|												|
+| Convolution 3x3     	| 1x1 stride, valid padding, outputs 10x10x64 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 5x5x64 				|
+| Flatten		| 1600 neurons        									|
+| Dropout	    | Training probality of 50%      									|
+| Fully connected		| output 400        									|
+| Dropout	    | Training probality of 50%      									|
+| Fully connected		| output 120        									|
+| Fully connected		| output 82       									|
+| Fully connected		| output 42       									|
+| Softmax				|         									|
+
+The code for the Network is located in the sixth cell of the ipython notebook.
+
+### Training
+
+The training algorithm employs the Adam optimizer algorithm with a custom adjustable learning rate. The training algorithm adapts the learning rate according with the validation set accuracy. If accuracy drops, learning rate decreases, if accuracy remains the same, learning rate increases. This adjustable learning rate helps to improve model convergence. In addition, the training algorithm keeps track of progress by saving the model every time it achieves a new threshold. Moreover, if the training accuracy diverges too much, the training algorithm restore the previous best accuracy state.
+
+The rest of the algorithm follows a common approach for classification problem which is to minimize the cross entropy between the logits (softmax) and the labels hot encoding. The values for the number of EPOCHS (20), batch size (256) and initial learning rate (0.001) were defined empirically. 
+
+
+The code for training the model is located in the seventh cell of the ipython notebook. 
+
+### Results
+
+The approach taken to develop this project was an iterative process with empirical validation. The first step was to test the classical LeNet network, which achieved an accuracy of 86% on the validation test. After that, we extended the network with two additional convolution layers because we realized that our network was not capable to take into account more complex objects such as Traffic signs. With the addition of these extra layers, the accuracy for the training set reached 98% but the validation set did not reach 92%. Finally, we extended the network with two additional dropouts after the fully connected layers 1 and 2, which helped the network to reach an accuracy above 95% for the validation set in less than 10 EPOCHS.
+
+Even though this network has achieved a high accuracy for the validation set, it did not perform well with the images downloaded from the Internet. We observed that our network was not robust enough to achieve translation invariance; our network correctly classifies only when the downloaded image are cropped at the center. This observation let us to extend our augmentation pipeline (see previous section about data augmentation) to also translate the images. As we mentioned previously, we use Tensor Flows functions to augment the data set in a random fashion and online with the training algorithm, i.e. the image is augmented only for the training and is not saved. We have set our augment pipeline to translate the images up to 10 pixel up/down/right/left.
+
+Because of the internet images and the translation augmentation, our final training algorithm takes two rounds to train the model. It first trains the network over the original data set for 10 EPOCHS. Then, it trains another 10 EPOCHS using the augment data pipeline to change the images at random, for each training. 
+
+Final Results:
+* training set accuracy of   ~99.5%
+* validation set accuracy of ~98.1% 
+* test set accuracy of       ~96.2%
+
+The code for calculating the accuracy of the model is located in the eighth and ninth cells of the Ipython notebook.
+
+###Test a Model on New Images
+
+Here are five German traffic signs downloaded from the web:
+
+![alt text][image8] ![alt text][image9] ![alt text][image10] 
+![alt text][image11] ![alt text][image12]
+
+
+First, it is important to observe the relation between these images and the number of examples at the training data set. From the training data set, image 1 has 2010 examples, image 2 has 1260 examples, image 3 has 480 examples, image 4 has 1860 examples and image 5 has 690 examples. So, because of the unbalance character among these classes, images 3 and 5 are more difficult to classify.
+
+The second observation is that the image format (size) and the place in the image where the traffic sigh is positioned are quite different from the training data set. The size difference can be easily circumvented by pre-processing the image. However, the position problem is not trivial to solve because the sign can be positioned at any place in the image. At first, we tried to hand code a crop pre-processing function but we believe that this is not right way to solve this problem because the sigh can be at any place. Finally, as we mentioned previously, we decide to augment our data set with a translation operation to move the signs around inside the images to overcome this problem.
+
+In order to understand better the predictions from our model, we decided to test the classifier over three versions for every image from the web, they are: the original image, an automatic cropped version and a hand cropped version. Here are the results for the prediction for all of them:
+
+| Image			        |	Original	|	Aut. Croped	| 	Hand Croped	        					| 
+|:---------------------:|:---------------:|:----------------:|:----------------:| 
+| 50 km/h      		| 50 km/h 		| 50 km/h		| 30 km/h |
+| 60 km/h      		| Ahead only		| 60 km/h 		| 60 km/h |
+| Children Crossing     | Wild animals crossing	| Children Crossing 	| Children Crossing | 
+| Keep right   		| Keep right		| Keep right 		| Keep right |
+| Stop Sign    		| 60 km/h 		| Stop Sign 		| Stop Sign |
+
+The code for making these predictions is located in the 11th and 12th cells of the Ipython notebook.
+
+For the original images, the classifier was able to correctly guess 2 of 5, which gives an accuracy of 40%. The neural network classified correctly images 1 and 4, which are the images with more examples in the training set (2010).
+
+For the automatically and hand cropped, the classifier giver an accuracy of 100% and 80%, respectively. As we can see, even with augment data, our neural network is not translation invariant because the cropped versions of the images from the web yielded a better accuracy. (The accuracy for the cropped images compares favorably with the accuracy of our validation set, which is above 80%.) 
+
+Here, we present the top 5 probilities for the automatic cropped images only. Our model has high confidence  (above 80%) for the prediction of images 1, 2 and 4. For image 3, our model is realtively sure with 70% of confidence. For image 5 the confidence is ~50%. Here, is important to point out that images 3 and 5 are the ones with less examples in the training set. The top five soft max probabilities for each image is presented below:
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .94         		| 50 km/h	| 
+| .05     		| 30 km/h 	|
+| .00~			| 80 km/h	|
+| .00~	      		| 60 km/h |
+| .00~			| 100 km/h |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .80         		| 60 km/h	| 
+| .07    		| 80 km/h 	|
+| .05			| 30 km/h |
+| .03	      		| 50 km/h* |
+| .02			| 20 km/h |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .74         		| Children crossing	| 
+| .14     		| Road narrows on the right |
+| .09			| Beware of ice/snow |
+| .01	      		| Right-of-way at |
+| .00~			| Dangerous curve to |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .100         		| Keep right	| 
+| .00~    		| Turn left ahead |
+| .00~			| Priority road |
+| .00~	      		| Stop |
+| .00~			| Slippery road |
+
+
+| Probability         	|     Prediction	| 
+|:---------------------:|:---------------------------------------------:| 
+| .55         		| STOP	| 
+| .11     		| 80 km/h |
+| .09			| 60 km/h |
+| .09	      		| 30 km/h |
+| .08			| 50 km/h |
+
+The code for making predictions is located in the 13th cell of the Ipython notebook.
+
+
+
